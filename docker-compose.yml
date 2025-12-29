@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Service API - Application Python/Flask
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: wservice-api
+    ports:
+      - "${API_PORT:-3000}:3000"
+    environment:
+      - FLASK_ENV=${FLASK_ENV:-development}
+      - DB_HOST=db
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_NAME=${DB_NAME:-wservice_db}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD}
+    volumes:
+      # Volume pour le développement (hot-reload)
+      - ./api:/app
+    depends_on:
+      - db
+    networks:
+      - wservice-network
+    restart: unless-stopped
+    command: python app.py
+
+  # Service Database - PostgreSQL
+  db:
+    image: postgres:15-alpine
+    container_name: wservice-db
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    environment:
+      - POSTGRES_DB=${DB_NAME:-wservice_db}
+      - POSTGRES_USER=${DB_USER:-postgres}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      # Volume persistant pour les données de la base
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - wservice-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# Réseaux virtuels
+networks:
+  wservice-network:
+    driver: bridge
+    name: wservice-network
+
+# Volumes persistants
+volumes:
+  db-data:
+    name: wservice-db-data
+    driver: local
+
