@@ -215,24 +215,3 @@ docker-compose up
 ```bash
 docker-compose exec db psql -U postgres -d wservice_db
 ```
-
-## 📖 Ressources
-
-- [Documentation Docker Compose](https://docs.docker.com/compose/)
-- [Docker Compose File Reference](https://docs.docker.com/compose/compose-file/)
-- [Best Practices Docker Compose](https://docs.docker.com/compose/production/)
-
-## ✅ Checklist de compréhension
-
-- [ ] Comprendre le concept de services
-- [ ] Comprendre les réseaux virtuels
-- [ ] Comprendre les volumes persistants
-- [ ] Savoir utiliser les commandes `up`, `down`, `logs`
-- [ ] Comprendre l'utilisation du fichier `.env`
-- [ ] Savoir tester l'application
-- [ ] Vérifier la persistance des données
-
----
-
-**Bon apprentissage ! 🎓**
-
